@@ -1,0 +1,87 @@
+﻿@model assignment2.Controllers.PaginatedList<Order>
+
+@{
+    ViewData["Title"] = "Customer Orders";
+    var prevDisabled = Model.HasPreviousPage ? "" : "disabled";
+    var nextDisabled = Model.HasNextPage ? "" : "disabled";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form asp-action="Index" method="get">
+    <p>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex)" asp-route-pageSize="5" class="btn btn-primary">5 Orders Per Page</a>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex)" asp-route-pageSize="10" class="btn btn-primary">10 Orders Per Page</a>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex)" asp-route-pageSize="20" class="btn btn-primary">20 Orders Per Page</a>
+    </p>
+</form>
+
+<ul class="pagination">
+    <li class="page-item @prevDisabled">
+        <a asp-action="Index"
+           asp-route-pageNumber="1"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="page-link">First</a>
+    </li>
+    <li class="page-item @prevDisabled">
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="page-link">Previous</a>
+    </li>
+    <li class="page-item @nextDisabled">
+        <a asp-action="Index"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="page-link">Next</a>
+    </li>
+    <li class="page-item @nextDisabled">
+        <a asp-action="Index"
+           asp-route-pageNumber="@Model.TotalPages"
+           asp-route-pageSize="@(Model.PageSize)"
+           class="page-link">Last</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Customer.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ShippedDate)
+            </th>
+            <th style="text-align: right;">
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Freight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ShipViaNavigation.CompanyName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CompanyName)
+            </td>
+            <td>
+                @Html.ValueFor(modelItem => item.OrderDate, "{0:yyyy-MM-dd}")
+            </td>
+            <td>
+                @Html.ValueFor(modelItem => item.ShippedDate, "{0:yyyy-MM-dd}")
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.Freight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipViaNavigation.CompanyName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
